@@ -1,23 +1,35 @@
-<h1>{{title}}</h1>
-<ul>
-  <p *ngIf="todos.length == 0"><small>Não há nenhuma tarefa Hoje!</small></p>
+<h1 class="title animated jackInTheBox">{{title}}</h1>
+
+<ul class="animated flipInX" *ngIf="mode=='list'">
+  <p class="text-center" *ngIf="todos.length == 0"><small>Não há nenhuma tarefa Hoje!</small></p>
   <li *ngFor="let todo of todos">
-    {{todo.id}} - {{todo.title}} 
-    <button *ngIf="!todo.done" (click)="markAsDone(todo)">Concluir</button> 
-    <button *ngIf="todo.done" (click)="markAsUndone(todo)">Refazer</button> 
-    <button (click)="remove(todo)">Remover</button>
+    {{todo.title}}
+    <button *ngIf="!todo.done" (click)="markAsDone(todo)"><i class="far fa-check-circle"></i></button>
+    <button *ngIf="todo.done" (click)="markAsUndone(todo)"><i class="fas fa-check-circle"></i></button>
+    <button (click)="remove(todo)"><i class="far fa-trash-alt"></i></button>
   </li>
 </ul>
 
-<form [formGroup]="form">
-  <fieldset>
+<div id="modal" *ngIf="mode=='add'" class="animated flipInX">
+  <form [formGroup]="form">
+    <h1 class="text-center">Nova Tarefa</h1>
     <label>Tarefa: </label>
-    <input 
-      type="text" 
-      placeholder="Titulo da tarefa" 
-      maxlength="60" 
-      formControlName="title">
-        <button [disabled]="form.invalid" (click)="add()">Salvar</button><br>
-        <small *ngIf="form.controls.title.invalid && !form.controls.title.pristine">Este campo deve conter entre 3 e 60 caracteres</small>
-  </fieldset>
-</form>
+    <input type="text" placeholder="Titulo da tarefa" maxlength="60" formControlName="title">
+    <p class="text-center">
+      <button class="button" [disabled]="form.invalid" (click)="add()"><i class="far fa-save"></i> Salvar</button><br>
+    </p>
+    <small class="text-danger" *ngIf="form.controls.title.invalid && !form.controls.title.pristine">Este campo deve
+      conter entre 3 e 60
+      caracteres</small>
+  </form>
+</div>
+
+<button class="add-button animated fadeInUp button" (click)="changeMode('add')" *ngIf="mode=='list'">
+  <i class="fas fa-plus-circle"></i>
+  NOVA TAREFA
+</button>
+
+<button class="add-button animated fadeInUp button" (click)="changeMode('list')" *ngIf="mode=='add'">
+  <i class="fas fa-times"></i>
+  CANCELAR
+</button>
